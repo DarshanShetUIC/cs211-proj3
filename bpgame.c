@@ -33,6 +33,7 @@ struct bpgame {
 /*** IMPLEMENTATION OF bp_XXXX FUNCTIONS HERE  ****/
 
 BPGame * bp_create(int nrows, int ncols){
+	// Check comments
 	if (nrows < 0 || nrows > 40 || ncols < 0 || ncols > 40){
 		fprintf(stderr, "%s", "nrows or ncols out of bounds!!!");
 		return NULL;
