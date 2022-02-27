@@ -162,8 +162,20 @@ int bp_is_compact(BPGame * b){
 	return 0;
 }
 
+void swap_places(BPGame * b, int row, int col){
+	char swp = b->arr[row][col];
+	b->arr[row][col] = b->arr[row+1][col];
+	b->arr[row+1][col] = swp;
+}
+
 void bp_float_one_step(BPGame * b){
-	return;
+	int i = 0;
+	int j = 0;
+	for (i; i < b->cols; i++){
+		for (j; j < b->rows-1; j++){
+			if (b->arr[j][i] == None && b->arr[j][i] != None){swap_places(b, j, i);}
+		}
+	}
 }
 
 int bp_score(BPGame * b){
