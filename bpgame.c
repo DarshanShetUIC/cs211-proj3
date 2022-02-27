@@ -178,8 +178,9 @@ void bp_float_one_step(BPGame * b){
 	int j = 0;
 	for (i; i < b->cols; i++){
 		for (j; j < b->rows-1; j++){
-			if (b->arr[j][i] == None && b->arr[j][i] != None){swap_places(b, j, i);}
+			if (b->arr[j][i] == None && b->arr[j+1][i] != None){swap_places(b, j, i);}
 		}
+		j = 0;
 	}
 }
 
@@ -230,10 +231,10 @@ int main(){
 	int c = 5;
 	BPGame* board = bp_create(r,c);
 	bp_display(board);
-	//bp_float_one_step(board);
+	bp_float_one_step(board);
 	bp_display(board);
 	//printf("\n%c\n", board->arr[2][2]);
-	printf("\nCan pop?: %d\n", bp_can_pop(board));
+	//printf("\nCan pop?: %d\n", bp_can_pop(board));
 	bp_destroy(board);
 	printf("\n");
 	return 0;
