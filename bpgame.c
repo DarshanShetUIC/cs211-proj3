@@ -217,7 +217,9 @@ int bp_can_pop(BPGame * b){
 }
 
 int bp_undo(BPGame * b){
+	// remember previous move
 	BPGame* prevState = b->prev;
+	// forget current move
 	if (prevState == NULL){return 0;}
 	int i = 0;
 	for (i; i < b->rows; i++){
@@ -225,11 +227,12 @@ int bp_undo(BPGame * b){
 	}
 	free(b->arr);
 	free(b);
+	// return to previous move
 	b = prevState;
 	return 1;
 }
 
-
+/*
 int main(){
 	printf("\n");
 	int r = 4;
@@ -244,4 +247,4 @@ int main(){
 	printf("\n");
 	return 0;
 }
-
+*/
