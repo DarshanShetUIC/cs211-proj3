@@ -199,11 +199,11 @@ int bp_can_pop(BPGame * b){
 			// Check balloon below
 			if (i+1 < b->rows){if (b->arr[i+1][j] != None || b->arr[i][j] != None){if (b->arr[i][j] == b->arr[i+1][j]){return 1;}}}
 			// Check balloon above
-			else if (i-1 >= 0){if (b->arr[i-1][j] != None || b->arr[i][j] != None){if (b->arr[i][j] == b->arr[i-1][j]){return 1;}}}
+			if (i-1 >= 0){if (b->arr[i-1][j] != None || b->arr[i][j] != None){if (b->arr[i][j] == b->arr[i-1][j]){return 1;}}}
 			// Check balloon on the right
-			else if (j+1 < b->cols){if (b->arr[i][j+1] != None || b->arr[i][j] != None){if (b->arr[i][j] == b->arr[i][j+1]){return 1;}}}
+			if (j+1 < b->cols){if (b->arr[i][j+1] != None || b->arr[i][j] != None){if (b->arr[i][j] == b->arr[i][j+1]){return 1;}}}
 			// Check balloon on the left
-			else if(j-1 >= 0){if (b->arr[i][j-1] != None || b->arr[i][j] != None){if (b->arr[i][j] == b->arr[i][j-1]){return 1;}}}
+			if(j-1 >= 0){if (b->arr[i][j-1] != None || b->arr[i][j] != None){if (b->arr[i][j] == b->arr[i][j-1]){return 1;}}}
 		}
 		j = 0;
 	}
