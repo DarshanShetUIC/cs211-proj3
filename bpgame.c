@@ -80,7 +80,39 @@ BPGame * bp_create(int nrows, int ncols){
 }
 
 BPGame * bp_create_from_mtx(char mtx[][MAX_COLS], int nrows, int ncols){
-	return NULL;
+	// Check bounds
+	if (nrows < 0 || nrows > 40 || ncols < 0 || ncols > 40){
+		printf("nrows or ncols out of bounds!!!");
+		return NULL;
+	}
+	
+	// Create board
+	BPGame* curr = (BPGame*) malloc(sizeof(BPGame));
+	curr->rows = nrows;
+	curr->cols = ncols;
+	curr->next = NULL;
+	curr->prev = NULL;
+	curr->arr = (char**) malloc(nrows * sizeof(char*));
+	int i = 0;
+	for (i; i < nrows; i++){
+		curr->arr[i] = (char*) malloc(ncols * sizeof(char));
+	}
+	
+	// Set random seed
+	srand(time(0));
+	
+	// Populate board with balloons from mtx
+	i = 0;
+	int j = 0;
+	for (i; i < nrows; i++){
+		//printf("Row index: %d\n", i);
+		for(j; j < ncols; j++){
+			//printf("Row column: %d\n", j);
+			curr->arr[i][j] = mtx[i][j];
+		}
+		j = 0;
+	}
+	return curr;
 }
 
 void bp_destroy(BPGame * b){
