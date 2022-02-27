@@ -175,19 +175,19 @@ int bp_pop(BPGame * b, int r, int c){ int balloonPopCount = 0;
         int currentClusterCol = c;
         while (clusterExists != 0) {
             if ((currentClusterRow + 1) <= 4 && b->arr[currentClusterRow][currentClusterCol] == b->arr[currentClusterRow + 1][currentClusterCol]) {
-                b->arr[currentClusterRow][currentClusterCol] = 'NONE';
+                b->arr[currentClusterRow][currentClusterCol] = None;
                 currentClusterRow = r+1;
             }
-           else if ((currentClusterRow - 1) <= 0 && b->arr[currentClusterRow][currentClusterCol] == b->arr[currentClusterRow - 1][currentClusterCol]) {
-                b->arr[currentClusterRow][currentClusterCol] = 'NONE';
+           else if ((currentClusterRow - 1) <= 0 && b->arr[currentClusterRow][currentClusterCol] == b->arr[currentClusterRow - 1 ][currentClusterCol]) {
+                b->arr[currentClusterRow][currentClusterCol] = None;
                 currentClusterRow = r-1;
             }
-           else if ((currentClusterCol + 1) <= 4 && b->arr[currentClusterRow][currentClusterCol] == b->arr[currentClusterRow][currentClusterCol+ 1]) {
-                b->arr[currentClusterRow][currentClusterCol] = 'NONE';
+           else if ((currentClusterCol + 1) <= 4 && b->arr[currentClusterRow][currentClusterCol] == b->arr[currentClusterRow][currentClusterCol+1]) {
+                b->arr[currentClusterRow][currentClusterCol] = None;
                 currentClusterCol = c+1;
             }
            else if ((currentClusterCol - 1) <= 0 && b->arr[currentClusterRow][currentClusterCol] == b->arr[currentClusterRow][currentClusterCol - 1]) {
-                b->arr[currentClusterRow][currentClusterCol] = 'NONE';
+                b->arr[currentClusterRow][currentClusterCol] = None;
                 currentClusterCol = c-1;
 
             } else {
