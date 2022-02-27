@@ -116,11 +116,16 @@ BPGame * bp_create_from_mtx(char mtx[][MAX_COLS], int nrows, int ncols){
 }
 
 void bp_destroy(BPGame * b){
-	return;
+	int i = 0;
+	for (i; i < b->rows; i++){
+		free(b->arr[i]);
+	}
+	free(b->arr);
+	free(b);
 }
 
 void bp_display(BPGame * b){
-	return;
+	
 }
 
 int bp_pop(BPGame * b, int r, int c){
