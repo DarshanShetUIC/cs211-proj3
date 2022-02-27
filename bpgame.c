@@ -142,10 +142,11 @@ void bp_display(BPGame * b){
 			printf("%c", b->arr[i][j]);
 		}
 		printf("+\n");
+		j = 0;
 	}
 	
-	// Print top border
-	printf("\n+");
+	// Print bottom border
+	printf("+");
 	i = 0;
 	for (i; i < b->rows; i++){
 		printf("-");
@@ -180,10 +181,15 @@ int bp_can_pop(BPGame * b){
 int bp_undo(BPGame * b){
 	return 0;
 }
+
 /*
 int main(){
 	printf("\nHi!\n");
-	
+	int r = 5;
+	int c = 5;
+	BPGame* board = bp_create(r,c);
+	bp_display(board);
+	bp_destroy(board);
 	printf("Bye!\n");
 	return 0;
 }
