@@ -175,6 +175,20 @@ int bp_get_balloon(BPGame * b, int r, int c){
 }
 
 int bp_can_pop(BPGame * b){
+	int i = 0;
+	int j = 0;
+	for (i; i < b->rows; i++){
+		for (j; j < b->cols; j++){
+			// Check balloon below
+			if (i+1 < b->rows){ if (b->arr[i][j] == b->arr[i+1][j]){return 1;}}
+			// Check balloon above
+			else if (i-1 >= 0){if (b->arr[i][j] == b->arr[i-1][j]){return 1;}}
+			// Check balloon on the right
+			else if (j+1 < b->cols){if (b->arr[i][j] == b->arr[i][j+1]){return 1;}}
+			// Check balloon on the left
+			else if (j-1 >= 0){if (b->arr[i][j] == b->arr[i][j-1]){return 1;}}
+		}
+	}
 	return 0;
 }
 
