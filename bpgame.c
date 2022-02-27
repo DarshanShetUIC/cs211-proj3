@@ -161,7 +161,15 @@ int bp_pop(BPGame * b, int r, int c){
 }
 
 int bp_is_compact(BPGame * b){
-	return 0;
+	int i = 0;
+	int j = 0;
+	for (i; i < b->cols; i++){
+		for (j; j < b->rows-1; j++){
+			if (b->arr[j][i] == None && b->arr[j+1][i] != None){return 0;}
+		}
+		j = 0;
+	}
+	return 1;
 }
 
 void swap_places(BPGame * b, int row, int col){
