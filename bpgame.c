@@ -5,7 +5,10 @@
 
 /** #include statements... **/
 #include <stdio.h>
+#include <stdlib.h>
 #include <stddef.h>
+#include <time.h>
+#include <ctype.h>
 
 #include "bpgame.h"
 
@@ -36,11 +39,39 @@ typedef struct bpgame {
 /*** IMPLEMENTATION OF bp_XXXX FUNCTIONS HERE  ****/
 
 BPGame * bp_create(int nrows, int ncols){
+	// Check bounds
 	if (nrows < 0 || nrows > 40 || ncols < 0 || ncols > 40){
 		printf("nrows or ncols out of bounds!!!");
 		return NULL;
 	}
-	return NULL;
+	
+	// Create board
+	BPGame* curr = (BPGame*) malloc(sizeof(BPGame));
+	curr->rows = nrows;
+	curr->cols = ncols;
+	curr->next = NULL;
+	curr->prev = NULL;
+	curr->arr = (char**) malloc(nrows * sizeof(char*));
+	int i = 0;
+	for (i; i < nrows; i++){
+		curr->arr[i] = (char*) malloc(ncols * sizeof(char));
+	}
+	
+	// Set random seed
+	srand(time(0));
+	
+	// Populate board with random balloons
+	i = 0;
+	int j = 0;
+	for (i; i < nrows; i++){
+		//printf("Row index: %d\n", i);
+		for(j; j < ncols; j++){
+			//printf("Row column: %d\n", j);
+			curr->arr[i][j] = (char)(rand() % 26) + 97;
+		}
+		j = 0;
+	}
+	return curr;
 }
 
 BPGame * bp_create_from_mtx(char mtx[][MAX_COLS], int nrows, int ncols){
@@ -82,3 +113,11 @@ int bp_can_pop(BPGame * b){
 int bp_undo(BPGame * b){
 	return 0;
 }
+/*
+int main(){
+	printf("\nHi!\n");
+	
+	printf("Bye!\n");
+	return 0;
+}
+*/
