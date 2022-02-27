@@ -108,7 +108,13 @@ BPGame * bp_create_from_mtx(char mtx[][MAX_COLS], int nrows, int ncols){
 		//printf("Row index: %d\n", i);
 		for(j; j < ncols; j++){
 			//printf("Row column: %d\n", j);
-			curr->arr[i][j] = mtx[i][j];
+			if (mtx[i][j] == None || mtx[i][j] == None || mtx[i][j] == None || mtx[i][j] == None || mtx[i][j] == None){
+				curr->arr[i][j] = mtx[i][j];
+			}
+			else{
+				printf("Not valid character!!!\n");
+				return NULL;
+			}
 		}
 		j = 0;
 	}
