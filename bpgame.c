@@ -126,10 +126,10 @@ void bp_destroy(BPGame * b){
 
 void bp_display(BPGame * b){
 	// Print top border
-	
 	printf("\n+");
 	int i = 0;
-	for (i; i < b->cols; i++){
+	int top_row_edge = 2 * b->cols + 1;
+	for (i; i < top_row_edge; i++){
 		printf("-");
 	}
 	printf("+\n");
@@ -139,22 +139,21 @@ void bp_display(BPGame * b){
 	i = 0;
 	int j = 0;
 	for (i; i < b->rows; i++){
-		printf("|");
+		printf("| ");
 		for (j; j < b->cols; j++){
-			printf("%c", b->arr[i][j]);
+			printf("%c ", b->arr[i][j]);
 		}
 		printf("|\n");
 		j = 0;
 	}
-	// Print bottom border
 	
+	// Print bottom border
 	printf("+");
 	i = 0;
-	for (i; i < b->cols; i++){
+	for (i; i < top_row_edge; i++){
 		printf("-");
 	}
-	printf("+\n");
-	
+	printf("+\n");	
 }
 
 int bp_pop(BPGame * b, int r, int c){
@@ -225,8 +224,8 @@ int bp_undo(BPGame * b){
 
 int main(){
 	printf("\n");
-	int r = 5;
-	int c = 4;
+	int r = 4;
+	int c = 5;
 	BPGame* board = bp_create(r,c);
 	bp_display(board);
 	bp_float_one_step(board);
