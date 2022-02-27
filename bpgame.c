@@ -193,7 +193,16 @@ int bp_can_pop(BPGame * b){
 }
 
 int bp_undo(BPGame * b){
-	return 0;
+	BPGame* prevState = b->prev;
+	if (prevState == NULL){return 0;}
+	int i = 0;
+	for (i; i < b->rows; i++){
+		free(b->arr[i]);
+	}
+	free(b->arr);
+	free(b);
+	b = prevState;
+	return 1;
 }
 
 /*
