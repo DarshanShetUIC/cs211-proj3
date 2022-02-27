@@ -154,8 +154,47 @@ void bp_display(BPGame * b){
 	printf("+\n");
 }
 
-int bp_pop(BPGame * b, int r, int c){
-	return 0;
+int bp_pop(BPGame * b, int r, int c){ int balloonPopCount = 0;
+
+    if (bp_can_pop(b) == 0)
+    {
+        return balloonPopCount;
+    }
+        /* Check up, down, left, right for matches
+         *      Check if these have matches of at least 2
+         *          If they have at least matches of 2, check if they have more
+         *  Check not to go to the end of array
+         */
+
+        // Check for adjacent matches
+        // Up
+        int clusterExists = 1;
+        int currentClusterRow = r;
+        int currentClusterCol = c;
+        while (clusterExists != 0) {
+            if ((currentClusterRow + 1) <= 4 && b->arr[currentClusterRow][currentClusterCol] == b->arr[currentClusterRow + 1][currentClusterCol]) {
+                b->arr[currentClusterRow][currentClusterCol] = 'NONE';
+                currentClusterRow = r+1;
+            }
+           else if ((currentClusterRow - 1) <= 0 && b->arr[currentClusterRow][currentClusterCol] == b->arr[currentClusterRow - 1][currentClusterCol]) {
+                b->arr[currentClusterRow][currentClusterCol] = 'NONE';
+                currentClusterRow = r-1;
+            }
+           else if ((currentClusterCol + 1) <= 4 && b->arr[currentClusterRow][currentClusterCol] == b->arr[currentClusterRow][currentClusterCol+ 1]) {
+                b->arr[currentClusterRow][currentClusterCol] = 'NONE';
+                currentClusterCol = c+1;
+            }
+           else if ((currentClusterCol - 1) <= 0 && b->arr[currentClusterRow][currentClusterCol] == b->arr[currentClusterRow][currentClusterCol - 1]) {
+                b->arr[currentClusterRow][currentClusterCol] = 'NONE';
+                currentClusterCol = c-1;
+
+            } else {
+               clusterExists = 0;
+           }
+
+        }
+
+    return balloonPopCount;
 }
 
 int bp_is_compact(BPGame * b){
