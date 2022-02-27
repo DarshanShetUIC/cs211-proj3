@@ -126,32 +126,37 @@ void bp_destroy(BPGame * b){
 
 void bp_display(BPGame * b){
 	// Print top border
+	/*
 	printf("\n+");
 	int i = 0;
 	for (i; i < b->rows; i++){
 		printf("-");
 	}
 	printf("+\n");
+	*/
 	
 	// print walls and characters
-	i = 0;
+	int i = 0;
 	int j = 0;
+	printf("\n");
 	for (i; i < b->rows; i++){
-		printf("+");
+		//printf("+");
 		for (j; j < b->cols; j++){
 			printf("%c", b->arr[i][j]);
 		}
-		printf("+\n");
+		printf("\n");
 		j = 0;
 	}
-	
+	printf("\n");
 	// Print bottom border
+	/*
 	printf("+");
 	i = 0;
 	for (i; i < b->rows; i++){
 		printf("-");
 	}
 	printf("+\n");
+	*/
 }
 
 int bp_pop(BPGame * b, int r, int c){
@@ -198,8 +203,9 @@ int bp_can_pop(BPGame * b){
 			// Check balloon on the right
 			else if (j+1 < b->cols){if (b->arr[i][j+1] != None || b->arr[i][j] != None){if (b->arr[i][j] == b->arr[i][j+1]){return 1;}}}
 			// Check balloon on the left
-			else if (j-1 >= 0){if (b->arr[i][j-1] != None || b->arr[i][j] != None){if (b->arr[i][j] == b->arr[i][j-1]){return 1;}}}
+			else if(j-1 >= 0){if (b->arr[i][j-1] != None || b->arr[i][j] != None){if (b->arr[i][j] == b->arr[i][j-1]){return 1;}}}
 		}
+		j = 0;
 	}
 	return 0;
 }
@@ -217,15 +223,19 @@ int bp_undo(BPGame * b){
 	return 1;
 }
 
-/*
+
 int main(){
-	printf("\nHi!\n");
-	int r = 5;
+	printf("\n");
+	int r = 4;
 	int c = 5;
 	BPGame* board = bp_create(r,c);
 	bp_display(board);
+	//bp_float_one_step(board);
+	bp_display(board);
+	//printf("\n%c\n", board->arr[2][2]);
+	printf("\nCan pop?: %d\n", bp_can_pop(board));
 	bp_destroy(board);
-	printf("Bye!\n");
+	printf("\n");
 	return 0;
 }
-*/
+
