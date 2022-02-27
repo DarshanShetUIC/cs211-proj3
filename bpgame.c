@@ -125,7 +125,32 @@ void bp_destroy(BPGame * b){
 }
 
 void bp_display(BPGame * b){
+	// Print top border
+	printf("\n+");
+	int i = 0;
+	for (i; i < b->rows; i++){
+		printf("-");
+	}
+	printf("+\n");
 	
+	// print walls and characters
+	i = 0;
+	int j = 0;
+	for (i; i < b->rows; i++){
+		printf("+");
+		for (j; j < b->cols; j++){
+			printf("%c", b->arr[i][j]);
+		}
+		printf("+\n");
+	}
+	
+	// Print top border
+	printf("\n+");
+	i = 0;
+	for (i; i < b->rows; i++){
+		printf("-");
+	}
+	printf("+\n");
 }
 
 int bp_pop(BPGame * b, int r, int c){
