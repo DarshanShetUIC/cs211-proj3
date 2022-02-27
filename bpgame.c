@@ -171,7 +171,7 @@ int bp_score(BPGame * b){
 }
 
 int bp_get_balloon(BPGame * b, int r, int c){
-	return 0;
+	return (int) b->arr[r][c];
 }
 
 int bp_can_pop(BPGame * b){
