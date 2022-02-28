@@ -67,12 +67,12 @@ BPGame * bp_create(int nrows, int ncols){
 		//printf("Row index: %d\n", i);
 		for(j; j < ncols; j++){
 			//printf("Row column: %d\n", j);
-			int rchar = rand() % 5;
+			int rchar = (rand() % 4) + 1;
 			if (rchar == 0){curr->arr[i][j] = None;}
-			else if (rchar == 1){curr->arr[i][j] = Red;}
-			else if (rchar == 2){curr->arr[i][j] = Blue;}
-			else if (rchar == 3){curr->arr[i][j] = Green;}
-			else if (rchar == 4){curr->arr[i][j] = Yellow;}	
+			if (rchar == 1){curr->arr[i][j] = Red;}
+			if (rchar == 2){curr->arr[i][j] = Blue;}
+			if (rchar == 3){curr->arr[i][j] = Green;}
+			if (rchar == 4){curr->arr[i][j] = Yellow;}	
 		}
 		j = 0;
 	}
