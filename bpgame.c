@@ -49,6 +49,7 @@ BPGame * bp_create(int nrows, int ncols){
 	BPGame* curr = (BPGame*) malloc(sizeof(BPGame));
 	curr->rows = nrows;
 	curr->cols = ncols;
+	curr->score = 0;
 	curr->next = NULL;
 	curr->prev = NULL;
 	curr->arr = (char**) malloc(nrows * sizeof(char*));
@@ -90,6 +91,7 @@ BPGame * bp_create_from_mtx(char mtx[][MAX_COLS], int nrows, int ncols){
 	BPGame* curr = (BPGame*) malloc(sizeof(BPGame));
 	curr->rows = nrows;
 	curr->cols = ncols;
+	curr->score = 0;
 	curr->next = NULL;
 	curr->prev = NULL;
 	curr->arr = (char**) malloc(nrows * sizeof(char*));
@@ -162,50 +164,70 @@ void bp_display(BPGame * b){
 	printf("+\n");	
 }
 
-int bp_pop(BPGame * b, int r, int c){ int balloonPopCount = 0;
+int r_pop(BPGame* b, int r, int c, int color){
+	b->arr[r][c] = None;
+	int numPopped = 1;
+	if(r-1 >= 0){
+		if(color == b->arr[r-1][c]){
+			numPopped = numPopped + r_pop(b,r-1,c,color);
+		}
+	}
+	if(r+1 < b->rows){
+		if(color == b->arr[r+1][c]){
+			numPopped = numPopped + r_pop(b,r+1,c,color);
+		}
+	}
+	if(c-1 >= 0){
+		if(color == b->arr[r][c-1]){
+			numPopped = numPopped + r_pop(b,r,c-1,color);
+		}
+	}
+	if(c+1 < b->cols){
+		if(color == b->arr[r][c+1]){
+			numPopped = numPopped + r_pop(b,r,c+1,color);
+		}
+	}
+	return numPopped;
+}
 
-    int balloonPopCount = 0;
+int can_pop_rc(BPGame* b, int r, int c, int color){
+	int hasNeighbors = 0;
+	if(r-1 >= 0){
+		if(color == b->arr[r-1][c]){
+			hasNeighbors++;
+		}
+	}
+	if(r+1 < b->rows){
+		if(color == b->arr[r+1][c]){
+			hasNeighbors++;
+		}
+	}
+	if(c-1 >= 0){
+		if(color == b->arr[r][c-1]){
+			hasNeighbors++;
+		}
+	}
+	if(c+1 < b->cols){
+		if(color == b->arr[r][c+1]){
+			hasNeighbors++;
+		}
+	}
+	if(hasNeighbors){
+		return 1;
+	}
+	else{
+		return 0;
+	}
+}
 
-    if (bp_can_pop(b) == 0)
-    {
-        return balloonPopCount;
-    }
-    
-    int clusterExists = 1;
-    int currentClusterRow = r;
-    int currentClusterCol = c;
-    while (clusterExists != 0) {
-        if ((currentClusterRow + 1) < b->rows && b->arr[currentClusterRow][currentClusterCol] == b->arr[currentClusterRow + 1][currentClusterCol]) {
-            b->arr[currentClusterRow][currentClusterCol] = None;
-            currentClusterRow = r+1;
-	    balloonPopCount++;
-            bp_pop(b, currentClusterRow, c);
-            
-        }
-        if ((currentClusterRow - 1) >= 0 && b->arr[currentClusterRow][currentClusterCol] == b->arr[currentClusterRow - 1 ][currentClusterCol]) {
-            b->arr[currentClusterRow][currentClusterCol] = None;
-            currentClusterRow = r-1;
-	    balloonPopCount++;
-            bp_pop(b, currentClusterRow, c);
-
-        }
-        if ((currentClusterCol + 1) < b->cols && b->arr[currentClusterRow][currentClusterCol] == b->arr[currentClusterRow][currentClusterCol+1]) {
-            b->arr[currentClusterRow][currentClusterCol] = None;
-            currentClusterCol = c+1;
-	    balloonPopCount++;
-            bp_pop(b, r, currentClusterCol);
-
-        }
-        if ((currentClusterCol - 1) >= 0 && b->arr[currentClusterRow][currentClusterCol] == b->arr[currentClusterRow][currentClusterCol - 1]) {
-            b->arr[currentClusterRow][currentClusterCol] = None;
-            currentClusterCol = c-1;
-	    balloonPopCount++;
-            bp_pop(b, r, currentClusterCol);
-
-        } else {
-            clusterExists = 0;
-        }
-	    return balloonPopCount;
+int bp_pop(BPGame * b, int r, int c){
+	int color = bp_get_balloon(b,r,c);
+	if (!can_pop_rc(b,r,c,color)){
+		return 0;
+	}
+	int numPopped = r_pop(b,r,c,color);
+	b->score = b->score + numPopped;
+	return numPopped;
 }
 
 int bp_is_compact(BPGame * b){
