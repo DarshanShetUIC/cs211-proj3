@@ -33,7 +33,14 @@ typedef struct bpgame {
 } BPGame;
 
 
-
+void bp_display_STD(BPGame *b) {
+    for (int i = 0; i < b->rows; i++) {
+            for (int j = 0; j < b->cols; j++) {
+                printf("%c", b->arr[i][j]);
+            }
+            printf("\n");
+    }
+}
 
 
 /*** IMPLEMENTATION OF bp_XXXX FUNCTIONS HERE  ****/
@@ -124,10 +131,11 @@ BPGame * bp_create_from_mtx(char mtx[][MAX_COLS], int nrows, int ncols){
 }
 
 void bp_destroy(BPGame * b){
-	int i = 0;
+	/*int i = 0;
 	for (i; i < b->rows; i++){
 		free(b->arr[i]);
 	}
+	*/
 	free(b->arr);
 	free(b);
 }
@@ -163,7 +171,7 @@ void bp_display(BPGame * b){
 	}
 	printf("+\n");	
 }
-
+/*
 int r_pop(BPGame* b, int r, int c, int color){
 	b->arr[r][c] = None;
 	int numPopped = 1;
@@ -219,16 +227,53 @@ int can_pop_rc(BPGame* b, int r, int c, int color){
 		return 0;
 	}
 }
+*/
 
-int bp_pop(BPGame * b, int r, int c){
-	int color = bp_get_balloon(b,r,c);
-	if (!can_pop_rc(b,r,c,color)){
-		return 0;
-	}
-	int numPopped = r_pop(b,r,c,color);
-	b->score = b->score + numPopped * (numPopped - 1);
-	return numPopped;
+int bp_pop_match(BPGame * b, int r, int c, char balloon, char direction){
+    // printf("\n *** row: %i col: %i *** \n", r, c);
+    if(r < 0 ||  r >= b->rows || c < 0 || c >= b->cols || b->arr[r][c] != balloon) {
+        return 0;
+    }
+    int count = 1;
+
+    if (direction != 'u') {
+        b->arr[r][c] = '.';
+        count += bp_pop_match(b, r - 1, c, balloon, 'd');
+    }
+    if (direction != 'd') {
+        b->arr[r][c] = '.';
+        count += bp_pop_match(b, r + 1, c, balloon, 'u');
+     }
+    if (direction != 'l') {
+        b->arr[r][c] = '.';
+        count += bp_pop_match(b, r, c - 1, balloon, 'r');
+    }
+    if (direction != 'r') {
+        b->arr[r][c] = '.';
+        count += bp_pop_match(b, r, c + 1, balloon, 'l');
+    }
+
+    return count;
 }
+
+int bp_pop(BPGame * b, int r, int c) {
+    if(r <= 0 || r > b->rows || r <= 0 || c > b->cols) {
+        return 0;
+    }
+    int balloon = b->arr[r][c];
+    int count = 0;
+    if((r - 1 >= 0 && b->arr[r - 1][c] == balloon) || (r + 1 < b->rows && b->arr[r + 1][c] == balloon) || (c - 1 >= 0 && b->arr[r][c- 1] == balloon) || (c + 1 < b->cols && b->arr[r][c + 1] == balloon)) {
+        count = 1;
+        count += bp_pop_match(b, r - 1, c, balloon, 'd');
+        count += bp_pop_match(b, r + 1, c, balloon, 'u');
+        count += bp_pop_match(b, r, c - 1, balloon, 'r');
+        count += bp_pop_match(b, r, c + 1, balloon, 'l');
+
+    }
+    count--;
+    b->score = b->score + count * (count - 1);
+    return count;
+    }
 
 int bp_is_compact(BPGame * b){
 	int i = 0;
