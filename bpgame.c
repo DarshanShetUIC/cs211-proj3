@@ -226,7 +226,7 @@ int bp_pop(BPGame * b, int r, int c){
 		return 0;
 	}
 	int numPopped = r_pop(b,r,c,color);
-	b->score = b->score + numPopped;
+	b->score = b->score + numPopped * (numPopped - 1);
 	return numPopped;
 }
 
