@@ -33,7 +33,14 @@ typedef struct bpgame {
 } BPGame;
 
 
-
+void bp_display_STD(BPGame *b) {
+    for each row {
+        for each column {
+            printf("%c", balloon);
+        }
+        printf("\n");
+    }
+}
 
 
 /*** IMPLEMENTATION OF bp_XXXX FUNCTIONS HERE  ****/
