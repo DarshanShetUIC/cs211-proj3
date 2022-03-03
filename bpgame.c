@@ -413,8 +413,7 @@ int bp_undo(BPGame * b){
 	if (prevState == NULL){
 		return 0;
 	}
-	int i = 0;
-	for (i; i < b->rows; i++){
+	for (int i; i < b->rows; i++){
 		free(b->head->arr[i]);
 	}
 	free(b->head->arr);
@@ -422,13 +421,10 @@ int bp_undo(BPGame * b){
 	
 	// return to previous move
 	b->head = prevState;
-	i = 0;
-	int j = 0;
-	for (i; i < b->rows; i++){
-		for(j; j < b->cols; j++){
+	for (int i; i < b->rows; i++){
+		for(int j; j < b->cols; j++){
 			b->arr[i][j] = b->head->arr[i][j];
 		}
-		j = 0;
 	}
 	b->score = b->head->score;
 	return 1;
