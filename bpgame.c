@@ -60,8 +60,7 @@ BPGame * bp_create(int nrows, int ncols){
 	b->head = NULL;
 	b->prev = NULL;
 	b->arr = (char**) malloc(b->rows * sizeof(char*));
-	int i = 0;
-	for (i; i < nrows; i++){
+	for (int i = 0; i < nrows; i++){
 		b->arr[i] = (char*) malloc(b->cols * sizeof(char));
 	}
 	
@@ -69,11 +68,9 @@ BPGame * bp_create(int nrows, int ncols){
 	srand(time(0));
 	
 	// Populate board with random balloons
-	i = 0;
-	int j = 0;
-	for (i; i < b->rows; i++){
+	for (int i = 0; i < b->rows; i++){
 		//printf("Row index: %d\n", i);
-		for(j; j < b->cols; j++){
+		for(int j = 0; j < b->cols; j++){
 			//printf("Row column: %d\n", j);
 			int rchar = (rand() % 4) + 1;
 			if (rchar == 0){b->arr[i][j] = None;}
@@ -82,7 +79,6 @@ BPGame * bp_create(int nrows, int ncols){
 			if (rchar == 3){b->arr[i][j] = Green;}
 			if (rchar == 4){b->arr[i][j] = Yellow;}	
 		}
-		j = 0;
 	}
 	
 	// Create BPGame state to put on stack at the very bottom, same state (original) as BPGame root state returned to bpop
@@ -93,17 +89,13 @@ BPGame * bp_create(int nrows, int ncols){
 	orig->head = NULL;
 	orig->prev = NULL;
 	orig->arr = (char**) malloc(orig->rows * sizeof(char*));
-	i = 0;
-	for (i; i < orig->rows; i++){
+	for (int i = 0; i < orig->rows; i++){
 		orig->arr[i] = (char*) malloc(orig->cols * sizeof(char));
 	}
-	i = 0;
-	j = 0;
-	for (i; i < orig->rows; i++){
-		for(j; j < orig->cols; j++){
+	for (int i = 0; i < orig->rows; i++){
+		for(int j = 0; j < orig->cols; j++){
 			orig->arr[i][j] = b->arr[i][j];
 		}
-		j = 0;
 	}
 	b->head = orig;
 	return b;
@@ -124,8 +116,7 @@ BPGame * bp_create_from_mtx(char mtx[][MAX_COLS], int nrows, int ncols){
 	b->head = NULL;
 	b->prev = NULL;
 	b->arr = (char**) malloc(b->rows * sizeof(char*));
-	int i = 0;
-	for (i; i < nrows; i++){
+	for (int i = 0; i < nrows; i++){
 		b->arr[i] = (char*) malloc(b->cols * sizeof(char));
 	}
 	
@@ -133,11 +124,9 @@ BPGame * bp_create_from_mtx(char mtx[][MAX_COLS], int nrows, int ncols){
 	srand(time(0));
 	
 	// Populate board with balloons from mtx
-	i = 0;
-	int j = 0;
-	for (i; i < nrows; i++){
+	for (int i = 0; i < nrows; i++){
 		//printf("Row index: %d\n", i);
-		for(j; j < ncols; j++){
+		for(int j = 0; j < ncols; j++){
 			//printf("Row column: %d\n", j);
 			if (mtx[i][j] == None || mtx[i][j] == Red || mtx[i][j] == Blue || mtx[i][j] == Green || mtx[i][j] == Yellow){
 				b->arr[i][j] = mtx[i][j];
@@ -147,7 +136,6 @@ BPGame * bp_create_from_mtx(char mtx[][MAX_COLS], int nrows, int ncols){
 				return NULL;
 			}
 		}
-		j = 0;
 	}
 	
 	// Create BPGame state to put on stack at the very bottom, same state (original) as BPGame root state returned to bpop
@@ -158,17 +146,13 @@ BPGame * bp_create_from_mtx(char mtx[][MAX_COLS], int nrows, int ncols){
 	orig->head = NULL;
 	orig->prev = NULL;
 	orig->arr = (char**) malloc(orig->rows * sizeof(char*));
-	i = 0;
-	for (i; i < orig->rows; i++){
+	for (int i = 0; i < orig->rows; i++){
 		orig->arr[i] = (char*) malloc(orig->cols * sizeof(char));
 	}
-	i = 0;
-	j = 0;
-	for (i; i < orig->rows; i++){
-		for(j; j < orig->cols; j++){
+	for (int i = 0; i < orig->rows; i++){
+		for(int j = 0; j < orig->cols; j++){
 			orig->arr[i][j] = b->arr[i][j];
 		}
-		j = 0;
 	}
 	b->head = orig;
 	return b;
@@ -178,8 +162,7 @@ void bp_destroy(BPGame * b){
 	// Destroy stack with all contents
 	while(b->head != NULL){
 		BPGame* temp = b->head->prev;
-		int i = 0;
-		for (i; i < b->rows; i++){
+		for (int i = 0; i < b->rows; i++){
 			free(b->head->arr[i]);
 		}
 		free(b->head->arr);
@@ -188,8 +171,7 @@ void bp_destroy(BPGame * b){
 	}
 
 	// Destroy game board state
-	int i = 0;
-	for (i; i < b->rows; i++){
+	for (int i = 0; i < b->rows; i++){
 		free(b->arr[i]);
 	}
 	free(b->arr);
@@ -198,10 +180,10 @@ void bp_destroy(BPGame * b){
 
 void bp_display_STD(BPGame *b) {
     for (int i = 0; i < b->rows; i++) {
-            for (int j = 0; j < b->cols; j++) {
-                printf("%c", b->arr[i][j]);
-            }
-            printf("\n");
+        for (int j = 0; j < b->cols; j++) {
+            printf("%c", b->arr[i][j]);
+        }
+        printf("\n");
     }
 }
 
@@ -315,19 +297,15 @@ int bp_pop(BPGame * b, int r, int c){
 	curr->arr = (char**) malloc(curr->rows * sizeof(char*));
 	
 	// Finish new BPGame state by setting up game board	
-	int i = 0;
-	for (i; i < curr->rows; i++){
+	for (int i = 0; i < curr->rows; i++){
 		curr->arr[i] = (char*) malloc(curr->cols * sizeof(char));
 	}
 	
 	// Copy balloons from prev state
-	i = 0;
-	int j = 0;
-	for (i; i < curr->rows; i++){
-		for(j; j < curr->cols; j++){
+	for (int i = 0; i < curr->rows; i++){
+		for(int j = 0; j < curr->cols; j++){
 			curr->arr[i][j] = b->arr[i][j];
 		}
-		j = 0;
 	}
 	
 	// Go pop similar balloons in new state, change score as well
@@ -337,26 +315,20 @@ int bp_pop(BPGame * b, int r, int c){
 	// Reflect new changes to bpop game board and score
 	b->score = curr->score;
 	// Copy balloons from prev state
-	i = 0;
-	j = 0;
-	for (i; i < curr->rows; i++){
-		for(j; j < curr->cols; j++){
+	for (int i = 0; i < curr->rows; i++){
+		for(int j = 0; j < curr->cols; j++){
 			b->arr[i][j] = curr->arr[i][j];
 		}
-		j = 0;
 	}
 	
 	return numPopped;
 }
 
 int bp_is_compact(BPGame * b){
-	int i = 0;
-	int j = 0;
-	for (i; i < b->cols; i++){
-		for (j; j < b->rows-1; j++){
+	for (int i = 0; i < b->cols; i++){
+		for (int j = 0; j < b->rows-1; j++){
 			if (b->arr[j][i] == None && b->arr[j+1][i] != None){return 0;}
 		}
-		j = 0;
 	}
 	return 1;
 }
@@ -368,13 +340,10 @@ void swap_places(BPGame * b, int row, int col){
 }
 
 void bp_float_one_step(BPGame * b){
-	int i = 0;
-	int j = 0;
-	for (i; i < b->cols; i++){
-		for (j; j < b->rows-1; j++){
+	for (int i = 0; i < b->cols; i++){
+		for (int j = 0; j < b->rows-1; j++){
 			if (b->arr[j][i] == None && b->arr[j+1][i] != None){swap_places(b, j, i);}
 		}
-		j = 0;
 	}
 }
 
@@ -387,10 +356,8 @@ int bp_get_balloon(BPGame * b, int r, int c){
 }
 
 int bp_can_pop(BPGame * b){
-	int i = 0;
-	int j = 0;
-	for (i; i < b->rows; i++){
-		for (j; j < b->cols; j++){
+	for (int i = 0; i < b->rows; i++){
+		for (int  j = 0; j < b->cols; j++){
 			// Check balloon below
 			if (i+1 < b->rows){if (b->arr[i+1][j] != None || b->arr[i][j] != None){if (b->arr[i][j] == b->arr[i+1][j]){return 1;}}}
 			// Check balloon above
@@ -400,7 +367,6 @@ int bp_can_pop(BPGame * b){
 			// Check balloon on the left
 			if(j-1 >= 0){if (b->arr[i][j-1] != None || b->arr[i][j] != None){if (b->arr[i][j] == b->arr[i][j-1]){return 1;}}}
 		}
-		j = 0;
 	}
 	return 0;
 }
@@ -421,10 +387,11 @@ int bp_undo(BPGame * b){
 	
 	// return to previous move
 	b->head = prevState;
-	for (int i; i < b->rows; i++){
-		for(int j; j < b->cols; j++){
+	for (int i = 0; i < b->rows; i++){
+		for(int j = 0; j < b->cols; j++){
 			b->arr[i][j] = b->head->arr[i][j];
 		}
+
 	}
 	b->score = b->head->score;
 	return 1;
