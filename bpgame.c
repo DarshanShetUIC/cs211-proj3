@@ -189,36 +189,47 @@ void bp_destroy(BPGame * b){
 	free(b);
 }
 
+void bp_display_STD(BPGame *b) {
+    for (int i = 0; i < b->rows; i++) {
+            for (int j = 0; j < b->cols; j++) {
+                printf("%c", b->arr[i][j]);
+            }
+            printf("\n");
+    }
+}
+
 void bp_display(BPGame * b){
 	// Print top border
-	printf("\n+");
-	int i = 0;
-	int top_row_edge = 2 * b->cols + 1;
-	for (i; i < top_row_edge; i++){
-		printf("-");
-	}
-	printf("+\n");
+  printf("\n  +");
+  int top_row_edge = 2 * b->cols + 1;
+  for (int i = 0; i < top_row_edge; i++) {
+    printf("-");
+  }
+  printf("+\n");
+
+
+  // print walls and characters
+  for (int i=0; i < b->rows; i++) {
+    printf("%i | ", i);
+    for (int j = 0; j < b->cols; j++) {
+      printf("%c ", b->arr[i][j]);
+    }
+    printf("|\n");
+  }
+
+
+  // Print bottom border
+  printf("  +");
+  for (int i = 0; i < top_row_edge; i++) {
+    printf("-");
+  }
+  printf("+\n");
+
+    printf("    ");
+    for (int j = 0; j < b->cols; j++) {
+      printf("%i ", j);
+    }
 	
-	
-	// print walls and characters
-	i = 0;
-	int j = 0;
-	for (i; i < b->rows; i++){
-		printf("| ");
-		for (j; j < b->cols; j++){
-			printf("%c ", b->arr[i][j]);
-		}
-		printf("|\n");
-		j = 0;
-	}
-	
-	// Print bottom border
-	printf("+");
-	i = 0;
-	for (i; i < top_row_edge; i++){
-		printf("-");
-	}
-	printf("+\n");	
 }
 
 int r_pop(BPGame* b, int r, int c, int color){

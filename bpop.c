@@ -193,7 +193,7 @@ void animate(BPGame * board) {
     sleep_ms(300);
     bp_float_one_step(board);
     clear();
-    bp_display(board);
+    bp_display_STD(board);
   }
   while(!bp_is_compact(board));
 }

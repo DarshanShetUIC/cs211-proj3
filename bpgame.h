@@ -149,6 +149,7 @@ extern void bp_destroy(BPGame * b);
 */
 extern void bp_display(BPGame * b);
 
+extern void bp_display_STD(BPGame *b);
 /**
 * Function:  bp_pop
 * Description:  (attempts to) "pop" the balloon at (r,c) (if any)
