@@ -1,7 +1,14 @@
+/*
 
+Author: Darshan Shet, Bianca Jankiewicz
 
-// file:  bpgame.c
+College: University of Illinois at Chicago
 
+Semester: Spring 2022
+
+File:  bpgame.c
+
+Description: functions to change game board
 
 /** #include statements... **/
 #include <stdio.h>
