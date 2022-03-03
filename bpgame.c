@@ -109,17 +109,17 @@ BPGame * bp_create_from_mtx(char mtx[][MAX_COLS], int nrows, int ncols){
 		return NULL;
 	}
 	
-	// Create board
-	BPGame* curr = (BPGame*) malloc(sizeof(BPGame));
-	curr->rows = nrows;
-	curr->cols = ncols;
-	curr->score = 0;
-	curr->head = NULL;
-	curr->prev = NULL;
-	curr->arr = (char**) malloc(nrows * sizeof(char*));
+	// Create board. This board is what gets changed all the time. Not added to stack.
+	BPGame* b = (BPGame*) malloc(sizeof(BPGame));
+	b->rows = nrows;
+	b->cols = ncols;
+	b->score = 0;
+	b->head = NULL;
+	b->prev = NULL;
+	b->arr = (char**) malloc(b->rows * sizeof(char*));
 	int i = 0;
 	for (i; i < nrows; i++){
-		curr->arr[i] = (char*) malloc(ncols * sizeof(char));
+		b->arr[i] = (char*) malloc(b->cols * sizeof(char));
 	}
 	
 	// Set random seed
@@ -133,7 +133,7 @@ BPGame * bp_create_from_mtx(char mtx[][MAX_COLS], int nrows, int ncols){
 		for(j; j < ncols; j++){
 			//printf("Row column: %d\n", j);
 			if (mtx[i][j] == None || mtx[i][j] == None || mtx[i][j] == None || mtx[i][j] == None || mtx[i][j] == None){
-				curr->arr[i][j] = mtx[i][j];
+				b->arr[i][j] = mtx[i][j];
 			}
 			else{
 				printf("Not valid character!!!\n");
@@ -142,7 +142,29 @@ BPGame * bp_create_from_mtx(char mtx[][MAX_COLS], int nrows, int ncols){
 		}
 		j = 0;
 	}
-	return curr;
+	
+	// Create BPGame state to put on stack at the very bottom, same state (original) as BPGame root state returned to bpop
+	BPGame* orig = (BPGame*) malloc(sizeof(BPGame));
+	orig->rows = b->rows;
+	orig->cols = b->cols;
+	orig->score = b->score;
+	orig->head = NULL;
+	orig->prev = NULL;
+	orig->arr = (char**) malloc(orig->rows * sizeof(char*));
+	i = 0;
+	for (i; i < orig->rows; i++){
+		orig->arr[i] = (char*) malloc(orig->cols * sizeof(char));
+	}
+	i = 0;
+	j = 0;
+	for (i; i < orig->rows; i++){
+		for(j; j < orig->cols; j++){
+			orig->arr[i][j] = b->arr[i][j];
+		}
+		j = 0;
+	}
+	b->head = orig;
+	return b;
 }
 
 void bp_destroy(BPGame * b){
