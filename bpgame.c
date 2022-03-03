@@ -165,6 +165,7 @@ void bp_display(BPGame * b){
 }
 
 int r_pop(BPGame* b, int r, int c, int color){
+	//printf("\nPopping balloon at %d %d\n", r, c);
 	b->arr[r][c] = None;
 	int numPopped = 1;
 	if(r-1 >= 0){
@@ -221,12 +222,45 @@ int can_pop_rc(BPGame* b, int r, int c, int color){
 }
 
 int bp_pop(BPGame * b, int r, int c){
+	//printf("\nAddress of b: %p\n", b);
+	// Get balloon color
 	int color = bp_get_balloon(b,r,c);
+	// If single balloon in location with specific color, quit
 	if (!can_pop_rc(b,r,c,color)){
 		return 0;
 	}
-	int numPopped = r_pop(b,r,c,color);
-	b->score = b->score + numPopped * (numPopped - 1);
+	
+	// Create new state
+	BPGame* curr = (BPGame*) malloc(sizeof(BPGame));
+	//printf("\nAddress of curr: %p\n", curr);
+	curr->rows = b->rows;
+	curr->cols = b->cols;
+	curr->score = b->score;
+	curr->next = NULL;
+	curr->prev = b;
+	curr->arr = (char**) malloc(b->rows * sizeof(char*));
+	int i = 0;
+	for (i; i < b->rows; i++){
+		curr->arr[i] = (char*) malloc(b->cols * sizeof(char));
+	}
+	// Copy balloons from prev state
+	i = 0;
+	int j = 0;
+	for (i; i < curr->rows; i++){
+		for(j; j < curr->cols; j++){
+			curr->arr[i][j] = b->arr[i][j];
+		}
+		j = 0;
+	}
+	
+	// Go pop similar balloons in new state
+	int numPopped = r_pop(curr,r,c,color);
+	curr->score = curr->score + numPopped * (numPopped - 1);
+	
+	// Remember curr node in b, Set b to new state
+	b->next = curr;
+	b = curr;
+	//printf("\nAddress of b: %p\n", b);
 	return numPopped;
 }
 
@@ -301,20 +335,3 @@ int bp_undo(BPGame * b){
 	b = prevState;
 	return 1;
 }
-
-/*
-int main(){
-	printf("\n");
-	int r = 4;
-	int c = 5;
-	BPGame* board = bp_create(r,c);
-	bp_display(board);
-	bp_float_one_step(board);
-	bp_display(board);
-	//printf("\n%c\n", board->arr[2][2]);
-	//printf("\nCan pop?: %d\n", bp_can_pop(board));
-	bp_destroy(board);
-	printf("\n");
-	return 0;
-}
-*/
