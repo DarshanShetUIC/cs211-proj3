@@ -25,7 +25,7 @@ typedef struct bpgame {
 	
 	int score;
 	
-	BPGame* next;
+	BPGame* head;
 	BPGame* prev;
 	
 	char** arr;
@@ -45,17 +45,17 @@ BPGame * bp_create(int nrows, int ncols){
 		return NULL;
 	}
 	
-	// Create board
-	BPGame* curr = (BPGame*) malloc(sizeof(BPGame));
-	curr->rows = nrows;
-	curr->cols = ncols;
-	curr->score = 0;
-	curr->next = NULL;
-	curr->prev = NULL;
-	curr->arr = (char**) malloc(nrows * sizeof(char*));
+	// Create board. This board is what gets changed all the time. Not added to stack.
+	BPGame* b = (BPGame*) malloc(sizeof(BPGame));
+	b->rows = nrows;
+	b->cols = ncols;
+	b->score = 0;
+	b->head = NULL;
+	b->prev = NULL;
+	b->arr = (char**) malloc(b->rows * sizeof(char*));
 	int i = 0;
 	for (i; i < nrows; i++){
-		curr->arr[i] = (char*) malloc(ncols * sizeof(char));
+		b->arr[i] = (char*) malloc(b->cols * sizeof(char));
 	}
 	
 	// Set random seed
@@ -64,20 +64,42 @@ BPGame * bp_create(int nrows, int ncols){
 	// Populate board with random balloons
 	i = 0;
 	int j = 0;
-	for (i; i < nrows; i++){
+	for (i; i < b->rows; i++){
 		//printf("Row index: %d\n", i);
-		for(j; j < ncols; j++){
+		for(j; j < b->cols; j++){
 			//printf("Row column: %d\n", j);
 			int rchar = (rand() % 4) + 1;
-			if (rchar == 0){curr->arr[i][j] = None;}
-			if (rchar == 1){curr->arr[i][j] = Red;}
-			if (rchar == 2){curr->arr[i][j] = Blue;}
-			if (rchar == 3){curr->arr[i][j] = Green;}
-			if (rchar == 4){curr->arr[i][j] = Yellow;}	
+			if (rchar == 0){b->arr[i][j] = None;}
+			if (rchar == 1){b->arr[i][j] = Red;}
+			if (rchar == 2){b->arr[i][j] = Blue;}
+			if (rchar == 3){b->arr[i][j] = Green;}
+			if (rchar == 4){b->arr[i][j] = Yellow;}	
 		}
 		j = 0;
 	}
-	return curr;
+	
+	// Create BPGame state to put on stack at the very bottom, same state (original) as BPGame root state returned to bpop
+	BPGame* orig = (BPGame*) malloc(sizeof(BPGame));
+	orig->rows = b->rows;
+	orig->cols = b->cols;
+	orig->score = b->score;
+	orig->head = NULL;
+	orig->prev = NULL;
+	orig->arr = (char**) malloc(orig->rows * sizeof(char*));
+	i = 0;
+	for (i; i < orig->rows; i++){
+		orig->arr[i] = (char*) malloc(orig->cols * sizeof(char));
+	}
+	i = 0;
+	j = 0;
+	for (i; i < orig->rows; i++){
+		for(j; j < orig->cols; j++){
+			orig->arr[i][j] = b->arr[i][j];
+		}
+		j = 0;
+	}
+	b->head = orig;
+	return b;
 }
 
 BPGame * bp_create_from_mtx(char mtx[][MAX_COLS], int nrows, int ncols){
@@ -92,7 +114,7 @@ BPGame * bp_create_from_mtx(char mtx[][MAX_COLS], int nrows, int ncols){
 	curr->rows = nrows;
 	curr->cols = ncols;
 	curr->score = 0;
-	curr->next = NULL;
+	curr->head = NULL;
 	curr->prev = NULL;
 	curr->arr = (char**) malloc(nrows * sizeof(char*));
 	int i = 0;
@@ -124,6 +146,19 @@ BPGame * bp_create_from_mtx(char mtx[][MAX_COLS], int nrows, int ncols){
 }
 
 void bp_destroy(BPGame * b){
+	// Destroy stack with all contents
+	while(b->head != NULL){
+		BPGame* temp = b->head->prev;
+		int i = 0;
+		for (i; i < b->rows; i++){
+			free(b->head->arr[i]);
+		}
+		free(b->head->arr);
+		free(b->head);
+		b->head = temp;
+	}
+
+	// Destroy game board state
 	int i = 0;
 	for (i; i < b->rows; i++){
 		free(b->arr[i]);
@@ -222,7 +257,6 @@ int can_pop_rc(BPGame* b, int r, int c, int color){
 }
 
 int bp_pop(BPGame * b, int r, int c){
-	//printf("\nAddress of b: %p\n", b);
 	// Get balloon color
 	int color = bp_get_balloon(b,r,c);
 	// If single balloon in location with specific color, quit
@@ -230,19 +264,22 @@ int bp_pop(BPGame * b, int r, int c){
 		return 0;
 	}
 	
-	// Create new state
+	// Create new node and add to stack
 	BPGame* curr = (BPGame*) malloc(sizeof(BPGame));
-	//printf("\nAddress of curr: %p\n", curr);
 	curr->rows = b->rows;
 	curr->cols = b->cols;
 	curr->score = b->score;
-	curr->next = NULL;
-	curr->prev = b;
-	curr->arr = (char**) malloc(b->rows * sizeof(char*));
+	curr->head = NULL;
+	curr->prev = b->head;
+	b->head = curr;
+	curr->arr = (char**) malloc(curr->rows * sizeof(char*));
+	
+	// Finish new BPGame state by setting up game board	
 	int i = 0;
-	for (i; i < b->rows; i++){
-		curr->arr[i] = (char*) malloc(b->cols * sizeof(char));
+	for (i; i < curr->rows; i++){
+		curr->arr[i] = (char*) malloc(curr->cols * sizeof(char));
 	}
+	
 	// Copy balloons from prev state
 	i = 0;
 	int j = 0;
@@ -253,14 +290,22 @@ int bp_pop(BPGame * b, int r, int c){
 		j = 0;
 	}
 	
-	// Go pop similar balloons in new state
+	// Go pop similar balloons in new state, change score as well
 	int numPopped = r_pop(curr,r,c,color);
 	curr->score = curr->score + numPopped * (numPopped - 1);
 	
-	// Remember curr node in b, Set b to new state
-	b->next = curr;
-	b = curr;
-	//printf("\nAddress of b: %p\n", b);
+	// Reflect new changes to bpop game board and score
+	b->score = curr->score;
+	// Copy balloons from prev state
+	i = 0;
+	j = 0;
+	for (i; i < curr->rows; i++){
+		for(j; j < curr->cols; j++){
+			b->arr[i][j] = curr->arr[i][j];
+		}
+		j = 0;
+	}
+	
 	return numPopped;
 }
 
