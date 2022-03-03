@@ -379,7 +379,7 @@ int bp_undo(BPGame * b){
 	if (prevState == NULL){
 		return 0;
 	}
-	for (int i; i < b->rows; i++){
+	for (int i = 0; i < b->rows; i++){
 		free(b->head->arr[i]);
 	}
 	free(b->head->arr);
