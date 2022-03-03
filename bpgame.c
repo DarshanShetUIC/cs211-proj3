@@ -249,6 +249,9 @@ int r_pop(BPGame* b, int r, int c, int color){
 }
 
 int can_pop_rc(BPGame* b, int r, int c, int color){
+	if (b->arr[r][c] == None){
+		return 0;
+	}
 	int hasNeighbors = 0;
 	if(r-1 >= 0){
 		if(color == b->arr[r-1][c]){
@@ -352,7 +355,7 @@ int bp_score(BPGame * b){
 }
 
 int bp_get_balloon(BPGame * b, int r, int c){
-	return (int) b->arr[r][c];
+	return b->arr[r][c];
 }
 
 int bp_can_pop(BPGame * b){
@@ -396,3 +399,57 @@ int bp_undo(BPGame * b){
 	b->score = b->head->score;
 	return 1;
 }
+/*
+int main(int argc, char *argv[]) {
+  BPGame * board=NULL;
+  char grid[MAX_ROWS][MAX_COLS];
+  int cmd;
+  int nrows, ncols, r, c, score;
+  int done;
+
+
+
+  if(argc == 1) 
+    board = bp_create(15, 12);
+  else if(argc==2){
+    if(!read_grid(grid, argv[1], &nrows, &ncols)) {
+      fprintf(stderr, "failed to read file %s\n", argv[1]);
+      fprintf(stderr, "Goodbye\n");
+      return 0;
+    }
+    printf("Successfully read input file %s\n", argv[1]);
+    scrub_grid(grid, nrows, ncols);
+    board = bp_create_from_mtx(grid, nrows, ncols);
+  }
+  else {
+    fprintf(stderr, "usage error:  zero or 1 cmd-line arg\n");
+    fprintf(stderr, "Goodbye\n");
+    return 0;
+  }
+  if(board != NULL) {
+
+    if(!bp_is_compact(board)) {
+      fprintf(stderr, "ERR:  board not compact\n");
+      bp_display(board);
+      fprintf(stderr, "Goodbye\n");
+      bp_destroy(board);
+      return 1;
+    }
+    // Test cases code here
+    bp_display_STD(board);
+    printf("Number of ballons popped: %d", bp_pop(board,0,0));
+    bp_display_STD(board);
+    bp_float_one_step(board);
+    bp_display_STD(board);
+    printf("Number of ballons popped: %d", bp_pop(board,0,0));
+    bp_display_STD(board);
+    printf("Success-status of undo: %d", bp_undo(board));
+    bp_display_STD(board);
+    //printf("SCORE:  %i\n", bp_score(board));
+    
+    
+    bp_destroy(board);
+    printf("  Goodbye\n");
+  }  // end if board != NULL
+}
+*/

@@ -276,9 +276,4 @@ int main(int argc, char *argv[]) {
     printf("  Goodbye\n");
   }  // end if board != NULL
 }
-	
-	
-	    
-	
-	
-	
+
