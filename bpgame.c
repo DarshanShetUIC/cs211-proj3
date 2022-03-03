@@ -139,7 +139,7 @@ BPGame * bp_create_from_mtx(char mtx[][MAX_COLS], int nrows, int ncols){
 		//printf("Row index: %d\n", i);
 		for(j; j < ncols; j++){
 			//printf("Row column: %d\n", j);
-			if (mtx[i][j] == None || mtx[i][j] == None || mtx[i][j] == None || mtx[i][j] == None || mtx[i][j] == None){
+			if (mtx[i][j] == None || mtx[i][j] == Red || mtx[i][j] == Blue || mtx[i][j] == Green || mtx[i][j] == Yellow){
 				b->arr[i][j] = mtx[i][j];
 			}
 			else{
