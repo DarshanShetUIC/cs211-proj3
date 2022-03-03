@@ -367,16 +367,29 @@ int bp_can_pop(BPGame * b){
 
 int bp_undo(BPGame * b){
 	// remember previous move
-	BPGame* prevState = b->prev;
-	// forget current move
-	if (prevState == NULL){return 0;}
+	BPGame* prevState = b->head->prev;
+	
+	// forget recent move
+	if (prevState == NULL){
+		return 0;
+	}
 	int i = 0;
 	for (i; i < b->rows; i++){
-		free(b->arr[i]);
+		free(b->head->arr[i]);
 	}
-	free(b->arr);
-	free(b);
+	free(b->head->arr);
+	free(b->head);
+	
 	// return to previous move
-	b = prevState;
+	b->head = prevState;
+	i = 0;
+	int j = 0;
+	for (i; i < b->rows; i++){
+		for(j; j < b->cols; j++){
+			b->arr[i][j] = b->head->arr[i][j];
+		}
+		j = 0;
+	}
+	b->score = b->head->score;
 	return 1;
 }
